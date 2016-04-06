@@ -1,5 +1,14 @@
 package com.lejos.view;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import com.lejos.model.Algorithm;
 
 import lejos.hardware.BrickFinder;
@@ -11,7 +20,7 @@ import lejos.hardware.lcd.LCD;
 
 public class MainView {
 
-	private GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
+	//private GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
 	private boolean isForward = true;
 	
 	private final int CURSOR_X = 10;
@@ -61,10 +70,26 @@ public class MainView {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		//System.out.println("Welcome to riddle");
-		//System.out.println("Please select 1:");
+		
 		MainView view = new MainView();
-		view.initiateMenu();
+		//view.initiateMenu();
+		  
+	    try {
+	      InputStream is = MainView.class.getResource("text.txt").openStream();
+	      DataInputStream din = new DataInputStream(is);
+	      BufferedReader br = new BufferedReader(new InputStreamReader(is));
+	      while (br.readLine() != null) {
+	    	  System.out.println("Hello");
+	      }
+	      din.close();
+	    } catch (FileNotFoundException e) {
+			e.printStackTrace();
+			Sound.beep();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 	
 	
