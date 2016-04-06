@@ -1,16 +1,16 @@
 package com.lejos.model;
 
-public class Coordinates {
+public class Pixel {
 	private int row;
 	private int column;
 	private boolean isOn = false;
 	
-	public Coordinates() {
+	public Pixel() {
 		row = -1;
 		column = -1;
 	}
 	
-	public Coordinates(int rNumber, int col,boolean isOn) {
+	public Pixel(int rNumber, int col, boolean isOn) {
 		row = rNumber;
 		column = col;
 		this.isOn = isOn;

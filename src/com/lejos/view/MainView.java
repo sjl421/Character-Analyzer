@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import com.lejos.model.Algorithm;
+import com.lejos.model.FileAccess;
 
 import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
@@ -26,7 +27,8 @@ public class MainView {
 	private final int CURSOR_X = 10;
 	final static String CURSOR = "<";
 	
-	public MainView() {
+	public MainView(String fileName) {
+		initiateMenu();
 		
 	}
 		
@@ -71,23 +73,7 @@ public class MainView {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		MainView view = new MainView();
-		//view.initiateMenu();
-		  
-	    try {
-	      InputStream is = MainView.class.getResource("text.txt").openStream();
-	      DataInputStream din = new DataInputStream(is);
-	      BufferedReader br = new BufferedReader(new InputStreamReader(is));
-	      while (br.readLine() != null) {
-	    	  System.out.println("Hello");
-	      }
-	      din.close();
-	    } catch (FileNotFoundException e) {
-			e.printStackTrace();
-			Sound.beep();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		MainView mainview = new MainView("text.txt");
 		
 		
 	}

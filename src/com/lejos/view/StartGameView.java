@@ -14,10 +14,18 @@ public class StartGameView {
 	private int menu_x = 0;
 	private final int CURSOR_X_START = 2;
 	
+	Algorithm algo;
+	
 	public StartGameView(boolean forward) {
+		// Initiate file access and everything
+		
+		algo = new Algorithm("text.txt");
+		
 		isForward = forward;
 		
 		startGame();
+		
+		
 	}
 	
 	private void startGame() {
@@ -30,12 +38,12 @@ public class StartGameView {
 	}
 	
 	private void startForward() {
-		
+		algo.forward();
 	}
 	
 	private void startBackward() {
 		LCD.clear();
-		int cursorIndex=2;
+		int cursorIndex=0;
 		// Display the choices
 		LCD.scroll();
 		for (int i=0; i < characters.length; ++i) {
@@ -63,12 +71,19 @@ public class StartGameView {
 				//LCD.scroll();
 				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
 			}
+			else if (buttonPressed == Button.ID_ENTER) {
+				// Then get the character we want to compare and break from the loop
+				break;
+			}
 			
 		}
 		
+		// At this point, cursor index points to the character we want
+		String testValue = characters[cursorIndex];
+		
 		// Temporarily perform the backward search for C
 		LCD.clear();
-		Algorithm algo = new Algorithm();
+		
 		algo.backward("C");
 		
 		Button.waitForAnyPress();

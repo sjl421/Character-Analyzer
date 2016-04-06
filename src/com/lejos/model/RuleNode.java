@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class RuleNode {
-	private ArrayList<Coordinates> lhs = new ArrayList<Coordinates>();
+	private ArrayList<Pixel> lhs = new ArrayList<Pixel>();
 	private String lhsCharacter;
 	private String rhs = "";
 	private boolean hasLHSChar = false;
@@ -51,7 +51,7 @@ public class RuleNode {
 				}
 				
 				// compute the coordinates and put it in the node
-				lhs.add(new Coordinates(coord[0], coord[1], true));
+				lhs.add(new Pixel(coord[0], coord[1], true));
 				
 				//System.out.println(coord[0] + " and " + coord[1]);
 				continue;
@@ -61,7 +61,7 @@ public class RuleNode {
 				if (lhsStr.charAt(lhsIndex) != ')') {
 					lhsCharacter = Character.toString(lhsStr.charAt(lhsIndex));
 					
-					ArrayList<Coordinates> temp = Algorithm.getRules(lhsCharacter);
+					ArrayList<Pixel> temp = Algorithm.getRules(lhsCharacter);
 					
 					lhs.addAll(temp);
 					
@@ -80,7 +80,7 @@ public class RuleNode {
 		return rhs;
 	}
 	
-	public ArrayList<Coordinates> getLHSCoords () {
+	public ArrayList<Pixel> getLHSPixels () {
 		return lhs;
 	}
 	
@@ -90,6 +90,21 @@ public class RuleNode {
 	
 	public boolean lhsHasChar () {
 		return hasLHSChar;
+	}
+	
+	public static boolean checkIfExists(Pixel pixel, RuleNode ruleNode) {
+		ArrayList<Pixel> lhsRules = ruleNode.getLHSPixels();
+		
+		for (int index=0; index < lhsRules.size(); ++index){
+			if (pixel.getRow() == lhsRules.get(index).getRow() && pixel.getColumn() == lhsRules.get(index).getColumn()) {
+				System.out.println(pixel.getRow() + "   " + pixel.getColumn()+ " in " + ruleNode.getRHS());
+				return true;
+			}
+		}
+		
+		return false;
+		
+		
 	}
 }
 
