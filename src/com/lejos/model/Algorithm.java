@@ -15,7 +15,7 @@ import lejos.utility.Delay;
 
 public class Algorithm {
 	public static ArrayList<RuleNode> rules = new ArrayList<RuleNode>();
-	//private ArrayList<Pixel> boxes = new ArrayList<Pixel>();
+	private ArrayList<Pixel> boxes;
 	
 	private ArrayList<RuleNode> possibleRules = new ArrayList<RuleNode>();
 	private ArrayList<RuleNode> rejectedRules = new ArrayList<RuleNode>();
@@ -65,6 +65,7 @@ public class Algorithm {
 		initiateForwardCondition();
 		
 		Robot robot = r;
+		boxes = new ArrayList<Pixel>();
 		
 		for (int row = 0; row <6; ++row ) {
 			for (int col = 0; col < 8; ++col) {
@@ -72,6 +73,7 @@ public class Algorithm {
 				
 				if (robot.isON()) {
 					robot.soundON();
+					boxes.add(new Pixel(row,col,true));
 					updatePossibilities(new Pixel(row, col, true));
 				}
 				else {
@@ -84,7 +86,7 @@ public class Algorithm {
 				for (int index = 0; index < possibleRules.size(); ++ index) {
 					LCD.drawString(possibleRules.get(index).getRHS()+"", index * 2, 1);
 				}
-				
+								
 				if (!possibleRules.isEmpty()) {
 					previousState = possibleRules;
 				}
@@ -96,16 +98,63 @@ public class Algorithm {
 				Delay.msDelay(1000);
 				LCD.clear();
 			}
+			LCD.drawString("Reconfigure if you have to", 0, 0);
+			Delay.msDelay(3000);
+			LCD.clear();
 		}	
+		
+		ArrayList<String> substrings = new ArrayList<String>();
+		
+		substrings = getSubStrings();
+		
 		
 		// Prints the result at the last
 		for (int index = 0; index < possibleRules.size(); ++ index) {
 			LCD.drawString(possibleRules.get(index).getRHS()+"", index * 2, 1);
 		}
 		
+		// Prints all of the substrings
+		for (int subIndex=0; subIndex < substrings.size(); subIndex++) {
+			LCD.drawString(substrings.get(subIndex)+"", subIndex * 2, 3);
+		}
+		
 		Delay.msDelay(4000);
 	}
 	
+
+	public ArrayList<String> getSubStrings() {
+		
+		ArrayList<String> substrings = new ArrayList<String>();
+		
+		ArrayList<Pixel> lhsRules = new ArrayList<Pixel>();
+		
+		for (int mainIndex = 0; mainIndex < rules.size(); ++mainIndex) {
+			lhsRules = rules.get(mainIndex).getLHSPixels();
+			substrings.add(rules.get(mainIndex).getRHS());
+			
+			// Here we go through each and every pixels of the rule. This should be changed for different platforms
+			for (int i = 0; i < boxes.size(); ++i) {	
+				Pixel testCoord = boxes.get(i);
+						
+				for (int index = 0; index < lhsRules.size(); index++) {
+					Pixel ruleCoord = lhsRules.get(index);
+					
+					// At this point, check if the robot generated coordinates is equal to the ones in the list and if it is on. If not, then error
+					if (testCoord.getRow() == ruleCoord.getRow() && testCoord.getColumn() == ruleCoord.getColumn()) {
+						if (!testCoord.isOn()) {
+							//LCD.drawString("Sorry not found",0,0);
+							substrings.remove(substrings.size()-1);
+						}
+					}
+				}
+			}
+	
+			// At this point, character is recognized
+			
+		}
+		
+		return substrings;
+	}
 	private void updatePossibilities(Pixel input) {
 		if (!input.isOn()) {
 			// Now, check which rules have the pixel and eliminate it
@@ -174,6 +223,9 @@ public class Algorithm {
 					Delay.msDelay(1000);
 					LCD.clear();
 				}
+				LCD.drawString("Reconfigure if you have to", 0, 0);
+				Delay.msDelay(3000);
+				LCD.clear();
 			}
 			
 			// At this point, character is recognized
