@@ -15,6 +15,8 @@ public class StartView {
 	
 	private Robot robot = new Robot();
 	
+	private boolean calibrated = false;
+	
 	public StartView() {
 		initiateMenu();
 		//robot  = new Robot();
@@ -31,12 +33,16 @@ public class StartView {
 		int x_coord = 0;
 		int y_coord = 0;
 		
-		LCD.drawString("Calibrate", x_coord, y_coord);
-		LCD.drawString("Scan", x_coord, y_coord+1);
-		
 		LCD.drawString(CURSOR, CURSOR_X, 0); 
 		
+		
+		
 		while (true) {
+			
+			LCD.drawString("Calibrate", x_coord, y_coord);
+			LCD.drawString("Scan", x_coord, y_coord+1);
+			
+			
 			int button = Button.waitForAnyPress();
 			
 			if (button == Button.ID_DOWN && !isScan) {
@@ -56,7 +62,10 @@ public class StartView {
 					calibrate();
 				}
 				else {
-					MainView mainView = new MainView("text.txt", robot);
+					if (!calibrated) {
+						MainView mainView = new MainView("text.txt", robot);
+						LCD.clear();
+					}
 				}
 			}
 			else if (button == Button.ID_ESCAPE) {
@@ -101,7 +110,7 @@ public class StartView {
 		}
 		
 		
-		
+		calibrated = true;
 		LCD.drawString("Calibrated!!",0,2);
 		
 		Delay.msDelay(1000);

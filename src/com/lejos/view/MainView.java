@@ -38,11 +38,14 @@ public class MainView {
 		
 	public void initiateMenu(Robot robot) {
 		LCD.clear();
-		LCD.drawString(CURSOR, CURSOR_X, 0);
 		
+		LCD.drawString(CURSOR, CURSOR_X, 0);
 		while (true) {
+			//LCD.clear();
 			LCD.drawString("Forward", 0, 0);
 			LCD.drawString("Backward", 0, 1);
+			
+			
 			
 			int buttonPressed = Button.waitForAnyPress();
 			
@@ -58,6 +61,7 @@ public class MainView {
 			}
 			else if (buttonPressed == Button.ID_ENTER) {
 				StartGameView startGame = new StartGameView(isForward, robot);
+				LCD.clear();
 			}
 			else if (buttonPressed == Button.ID_ESCAPE) {
 				break;

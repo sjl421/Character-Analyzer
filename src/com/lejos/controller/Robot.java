@@ -48,6 +48,7 @@ public class Robot {
 		pilot = new DifferentialPilot(5.42f, 9.6f, Motor.A, Motor.C, false);
 		travelDistance = (float) 3.0;
 		pilot.setTravelSpeed(speed);
+		pilot.setRotateSpeed(6);
 		
 		
 	}
@@ -129,8 +130,8 @@ public class Robot {
         sampleSize = sampleProvider.sampleSize();
         
         float value = getSample();
-        //LCD.drawString(value+" is read", 0, 0);
-        //Delay.msDelay(2000);
+        
+        
         float lowerBound = (float) (on * 0.75);
         float upperBound = (float) (on * 1.5);       
         

@@ -108,13 +108,20 @@ public class Algorithm {
 		
 		substrings = getSubStrings();
 		
-		
+		if (possibleRules.isEmpty()) {
+			robot.soundFailure();
+		}
+		else {
+			robot.soundSuccess();
+		}
 		// Prints the result at the last
+		LCD.drawString("Possibilities:", 0, 0);
 		for (int index = 0; index < possibleRules.size(); ++ index) {
 			LCD.drawString(possibleRules.get(index).getRHS()+"", index * 2, 1);
 		}
 		
 		// Prints all of the substrings
+		LCD.drawString("Substrings incld:", 0, 2);
 		for (int subIndex=0; subIndex < substrings.size(); subIndex++) {
 			LCD.drawString(substrings.get(subIndex)+"", subIndex * 2, 3);
 		}

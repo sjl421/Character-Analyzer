@@ -45,6 +45,7 @@ public class StartGameView {
 		else {
 			startBackward(robot);
 		}
+		LCD.clear();
 	}
 	
 	private void startForward(Robot robot) {
@@ -68,27 +69,8 @@ public class StartGameView {
 		while (!Button.ENTER.isDown()) {
 			TextMenu testsMenu = new TextMenu(chars, 1, "Select a test");
 			testsNumber = testsMenu.select();
-			//int buttonPressed = Button.waitForAnyPress();
 			
-//			if (buttonPressed == Button.ID_ESCAPE) {
-//				
-//				break;
-//			}
-//			else if(buttonPressed == Button.ID_DOWN && cursorIndex < characters.size()) {
-//				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
-//				cursorIndex++;
-//				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
-//			}
-//			else if (buttonPressed == Button.ID_UP ) {
-//				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
-//				cursorIndex--;
-//				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
-//			}
-//			else if (buttonPressed == Button.ID_ENTER) {
-//				// Then get the character we want to compare and break from the loop
-//				break;
-//			}
-			
+						
 		}
 		
 		// At this point, cursor index points to the character we want
