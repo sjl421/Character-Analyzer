@@ -91,12 +91,20 @@ public class StartView {
 		
 		LCD.clear();
 		LCD.drawString("Enter for distance",0,0);
+		buttonID = Button.waitForAnyPress();
 		
-		robot.readPixelSize();
+		if (buttonID == Button.ID_ESCAPE) {
+			return;
+		}
+		else if (buttonID == Button.ID_ENTER) {
+			robot.recordOFF();
+		}
+		
+		robot.readDistance();
 		
 		LCD.drawString("Calibrated!!",0,2);
 		
-		Delay.msDelay(2000);
+		Delay.msDelay(1000);
 		
 		//LCD.clear();
 		initiateMenu();

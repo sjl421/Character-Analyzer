@@ -2,6 +2,8 @@ package com.lejos.controller;
 
 import com.lejos.model.Pixel;
 
+import lejos.hardware.Audio;
+import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.port.Port;
@@ -12,7 +14,7 @@ import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
 
 public class Robot {
-	private float travelDistance = 0;
+	private double travelDistance = 0;
 	private int row = 0;
 	private int col = 0;
 	private int speed = 4;
@@ -23,7 +25,7 @@ public class Robot {
 	private Pixel currentPixel;
 	
 	private static Port colorSensorPort = SensorPort.S4;
-    private static EV3ColorSensor colorSensor=null;
+    private static EV3ColorSensor colorSensor = null;
     private static SampleProvider sampleProvider;
     private static int sampleSize;
     
@@ -45,7 +47,27 @@ public class Robot {
 		pilot = new DifferentialPilot(5.42f, 9.6f, Motor.A, Motor.C, false);
 		travelDistance = (float) 3.0;
 		pilot.setTravelSpeed(speed);
+		
+		
 	}
+	
+	public void soundON() {
+		Sound.systemSound(true, 0);
+	}
+	
+	public void soundOFF() {
+		Sound.systemSound(true, 1);
+	}
+	
+	public void soundSuccess() {
+		Sound.systemSound(true, 3);
+	}
+	
+	public void soundFailure() {
+		Sound.systemSound(true, 2);
+	}
+	
+	
 	
 	public void travelOne() {
 		// Robot checks with count and see if it should go right, left or forward
@@ -147,12 +169,9 @@ public class Robot {
         return getSample();
 	}
 	
-	public void readPixelSize(){
+	public void readDistance(){
 		LCD.clear();
-		LCD.drawString("Place the sensor", 0, 1);
-		LCD.drawString("within 5 seconds", 0, 2);
-		Delay.msDelay(5000);
-		LCD.clear();
+		
 		LCD.drawString("Scanning the pixelSize", 0, 1);
 
 		pilot.forward();
@@ -174,11 +193,11 @@ public class Robot {
 		}
 		pilot.stop();
 		LCD.clear();
-		float pixelSize = (float) (speed*(time2-time1));	
+		double pixelSize = speed*(time2-time1);	
 		travelDistance = pixelSize;
 		LCD.drawString("Pixel Size read as:", 0, 3);
 		LCD.drawString(""+pixelSize, 0, 4);
-		Delay.msDelay(5000);
+		Delay.msDelay(1000);
 		
 	}
 }

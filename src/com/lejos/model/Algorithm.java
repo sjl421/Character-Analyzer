@@ -20,9 +20,11 @@ public class Algorithm {
 	private ArrayList<RuleNode> possibleRules = new ArrayList<RuleNode>();
 	private ArrayList<RuleNode> rejectedRules = new ArrayList<RuleNode>();
 	
+	private ArrayList<RuleNode> previousState = new ArrayList<RuleNode>();
+	
 	private static ArrayList<String> rhsRules = new ArrayList<String>();
 	
-	private Robot robot;
+	//private Robot robot;
 	
 	FileAccess fileAccess;
 	
@@ -62,7 +64,6 @@ public class Algorithm {
 	public void forward(Robot r) {
 		initiateForwardCondition();
 		
-
 		Robot robot = r;
 		
 		for (int row = 0; row <6; ++row ) {
@@ -70,17 +71,39 @@ public class Algorithm {
 				robot.travelOne();
 				
 				if (robot.isON()) {
+					robot.soundON();
 					updatePossibilities(new Pixel(row, col, true));
 				}
 				else {
+					robot.soundOFF();
 					updatePossibilities(new Pixel (row,col, false));
 				}
 				
-				LCD.drawString(row+" "+col, 0, 0);
+				LCD.drawString("Pixel: "+ row+" "+col, 0, 0);
+				
+				for (int index = 0; index < possibleRules.size(); ++ index) {
+					LCD.drawString(possibleRules.get(index).getRHS()+"", index * 2, 1);
+				}
+				
+				if (!possibleRules.isEmpty()) {
+					previousState = possibleRules;
+				}
+				else {
+					robot.soundFailure();
+					possibleRules = previousState;
+				}
+				
 				Delay.msDelay(1000);
 				LCD.clear();
 			}
-		}		
+		}	
+		
+		// Prints the result at the last
+		for (int index = 0; index < possibleRules.size(); ++ index) {
+			LCD.drawString(possibleRules.get(index).getRHS()+"", index * 2, 1);
+		}
+		
+		Delay.msDelay(4000);
 	}
 	
 	private void updatePossibilities(Pixel input) {
@@ -99,6 +122,7 @@ public class Algorithm {
 	
 	private void initiateForwardCondition() {
 		possibleRules = rules;
+		previousState = rules;
 	}
 	
 	public void backward(String str, Robot robot) {
@@ -121,10 +145,12 @@ public class Algorithm {
 					
 					Pixel testCoord;
 					if (robot.isON()) {
+						robot.soundON();
 						//LCD.drawString("is on", 0, 0);
 						testCoord = new Pixel(row, col, true);
 					}
 					else {
+						robot.soundOFF();
 						//LCD.drawString("is off and " + robot.getOFF(), 0, 0);
 						testCoord = new Pixel(row, col, false);
 					}		
@@ -136,6 +162,7 @@ public class Algorithm {
 						// At this point, check if the robot generated coordinates is equal to the ones in the list and if it is on. If not, then error
 						if (testCoord.getRow() == ruleCoord.getRow() && testCoord.getColumn() == ruleCoord.getColumn()) {
 							if (!testCoord.isOn()) {
+								robot.soundFailure();
 								LCD.drawString("Sorry not found",0,0);
 								return;
 							}
@@ -149,24 +176,9 @@ public class Algorithm {
 				}
 			}
 			
-//			for (int i = 0; i < boxes.size(); ++i) {	
-//				Pixel testCoord = boxes.get(i);
-//				
-//				for (int index = 0; index < lhsRules.size(); index++) {
-//					Pixel ruleCoord = lhsRules.get(index);
-//					
-//					// At this point, check if the robot generated coordinates is equal to the ones in the list and if it is on. If not, then error
-//					if (testCoord.getRow() == ruleCoord.getRow() && testCoord.getColumn() == ruleCoord.getColumn()) {
-//						if (!testCoord.isOn()) {
-//							LCD.drawString("Sorry not found",0,0);
-//							return;
-//						}
-//					}
-//				}
-//			}
-			
 			// At this point, character is recognized
 			LCD.drawString("Character has been recognized",0,0);
+			robot.soundSuccess();
 		}
 		else {
 			LCD.drawString("It is null",0,0);
