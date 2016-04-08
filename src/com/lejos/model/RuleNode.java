@@ -97,7 +97,7 @@ public class RuleNode {
 		
 		for (int index=0; index < lhsRules.size(); ++index){
 			if (pixel.getRow() == lhsRules.get(index).getRow() && pixel.getColumn() == lhsRules.get(index).getColumn()) {
-				System.out.println(pixel.getRow() + "   " + pixel.getColumn()+ " in " + ruleNode.getRHS());
+				//System.out.println(pixel.getRow() + "   " + pixel.getColumn()+ " in " + ruleNode.getRHS());
 				return true;
 			}
 		}

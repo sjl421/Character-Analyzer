@@ -1,5 +1,8 @@
 package com.lejos.view;
 
+import java.util.ArrayList;
+
+import com.lejos.controller.Robot;
 import com.lejos.model.Algorithm;
 
 import lejos.hardware.BrickFinder;
@@ -8,46 +11,52 @@ import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.LCD;
 
 public class StartGameView {
-	private String[] characters = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+	private ArrayList<String> characters = new ArrayList<String>();
 	private boolean isForward;
 	
 	private int menu_x = 0;
 	private final int CURSOR_X_START = 2;
 	
-	Algorithm algo;
 	
-	public StartGameView(boolean forward) {
+	Algorithm algo;
+	//private Robot robot;
+	
+	public StartGameView(boolean forward, Robot robot) {
 		// Initiate file access and everything
 		
-		algo = new Algorithm("text.txt");
+		algo = new Algorithm("text.txt", robot);
+		
+		characters = algo.getRuleValues();
 		
 		isForward = forward;
 		
-		startGame();
+		//this.robot = robot;
+		
+		startGame(robot);
 		
 		
 	}
 	
-	private void startGame() {
+	private void startGame(Robot robot) {
 		if (isForward) {
-			startForward();
+			startForward(robot);
 		}
 		else {
-			startBackward();
+			startBackward(robot);
 		}
 	}
 	
-	private void startForward() {
-		algo.forward();
+	private void startForward(Robot robot) {
+		algo.forward(robot);
 	}
 	
-	private void startBackward() {
+	private void startBackward(Robot robot) {
 		LCD.clear();
 		int cursorIndex=0;
 		// Display the choices
 		LCD.scroll();
-		for (int i=0; i < characters.length; ++i) {
-			System.out.println(characters[i]);
+		for (int i=0; i < characters.size(); ++i) {
+			LCD.drawString(characters.get(i), 0, i);
 		}
 		
 		LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
@@ -59,7 +68,7 @@ public class StartGameView {
 				
 				break;
 			}
-			else if(buttonPressed == Button.ID_DOWN && cursorIndex < characters.length) {
+			else if(buttonPressed == Button.ID_DOWN && cursorIndex < characters.size()) {
 				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
 				cursorIndex++;
 				
@@ -79,12 +88,12 @@ public class StartGameView {
 		}
 		
 		// At this point, cursor index points to the character we want
-		String testValue = characters[cursorIndex];
+		String testValue = characters.get(cursorIndex);
 		
 		// Temporarily perform the backward search for C
 		LCD.clear();
 		
-		algo.backward("C");
+		algo.backward(testValue, robot);
 		
 		Button.waitForAnyPress();
 		

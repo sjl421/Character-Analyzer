@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import com.lejos.controller.Robot;
 import com.lejos.model.Algorithm;
 import com.lejos.model.FileAccess;
 
@@ -27,12 +28,16 @@ public class MainView {
 	private final int CURSOR_X = 10;
 	final static String CURSOR = "<";
 	
-	public MainView(String fileName) {
-		initiateMenu();
+	//private Robot robot;
+	
+	public MainView(String fileName, Robot robot) {
+		initiateMenu(robot);
+		//this.robot = robot;
 		
 	}
 		
-	public void initiateMenu() {
+	public void initiateMenu(Robot robot) {
+		LCD.clear();
 		LCD.drawString(CURSOR, CURSOR_X, 0);
 		
 		while (true) {
@@ -52,7 +57,7 @@ public class MainView {
 				isForward = !isForward;
 			}
 			else if (buttonPressed == Button.ID_ENTER) {
-				StartGameView startGame = new StartGameView(isForward);
+				StartGameView startGame = new StartGameView(isForward, robot);
 			}
 			else if (buttonPressed == Button.ID_ESCAPE) {
 				break;
@@ -73,7 +78,7 @@ public class MainView {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		MainView mainview = new MainView("text.txt");
+		MainView mainview = new MainView("text.txt", new Robot());
 		
 		
 	}

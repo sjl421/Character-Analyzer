@@ -11,37 +11,41 @@ import com.lejos.view.MainView;
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.Delay;
 
 public class Algorithm {
 	public static ArrayList<RuleNode> rules = new ArrayList<RuleNode>();
-	private ArrayList<Pixel> boxes = new ArrayList<Pixel>();
+	//private ArrayList<Pixel> boxes = new ArrayList<Pixel>();
 	
 	private ArrayList<RuleNode> possibleRules = new ArrayList<RuleNode>();
 	private ArrayList<RuleNode> rejectedRules = new ArrayList<RuleNode>();
+	
+	private static ArrayList<String> rhsRules = new ArrayList<String>();
 	
 	private Robot robot;
 	
 	FileAccess fileAccess;
 	
-	public Algorithm(String filename) {
-		boxes.add(new Pixel(0,0,true));
-		boxes.add(new Pixel(0,1,true));
-		boxes.add(new Pixel(1,0,false));
-		boxes.add(new Pixel(2,0,true));
-		boxes.add(new Pixel(2,1,true));
-		boxes.add(new Pixel(0,2,false));
-		//boxes.add(new Pixel(0,2,true));
+	public Algorithm(String filename, Robot robot) {
+//		boxes.add(new Pixel(0,0,true));
+//		boxes.add(new Pixel(0,1,true));
+//		boxes.add(new Pixel(1,0,false));
+//		boxes.add(new Pixel(2,0,true));
+//		boxes.add(new Pixel(2,1,true));
+//		boxes.add(new Pixel(0,2,false));
+//		//boxes.add(new Pixel(0,2,true));
 		
 		fileAccess = new FileAccess(filename);
-		
-		rules = fileAccess.getRules();
-		
-		robot = new Robot();
+			
+		//this.robot = robot;
+		//robot = new Robot();
 	}
 	
 	public static void addRule(String str) {
-		rules.add(new RuleNode(str));
-		System.out.println(str);
+		RuleNode temp = new RuleNode(str);
+		rules.add(temp);
+		
+		rhsRules.add(temp.getRHS());
 	}
 	
 	public RuleNode find(String str) {
@@ -55,35 +59,28 @@ public class Algorithm {
 		return null;
 	}
 	
-	public void forward() {
+	public void forward(Robot r) {
 		initiateForwardCondition();
 		
-		//robot.travelOne();
-		// Go through each and every pixels and update the possible rules each time
-//		for (int row =0; row < 8; row++) {
-//			for (int col = 0; col < 6; col ++) {
-//				Pixel temp = new Pixel(row,col, true);
-//				
-//				updatePossibilities(temp);
-//			}
-//		}
+
+		Robot robot = r;
 		
-		int i = 0;
-		while (i < boxes.size()) {
-			updatePossibilities(boxes.get(i));
-			i++;
-		}
-		
-		// At this point, possibleRules will have the possible values
-		if (!possibleRules.isEmpty()) {
-			for (int j=0; j < possibleRules.size(); ++ j) {
-				System.out.println("Possible value is " + possibleRules.get(j).getRHS());
+		for (int row = 0; row <6; ++row ) {
+			for (int col = 0; col < 8; ++col) {
+				robot.travelOne();
+				
+				if (robot.isON()) {
+					updatePossibilities(new Pixel(row, col, true));
+				}
+				else {
+					updatePossibilities(new Pixel (row,col, false));
+				}
+				
+				LCD.drawString(row+" "+col, 0, 0);
+				Delay.msDelay(1000);
+				LCD.clear();
 			}
-		}
-		else {
-			System.out.println("No match");
-		}
-		
+		}		
 	}
 	
 	private void updatePossibilities(Pixel input) {
@@ -104,7 +101,8 @@ public class Algorithm {
 		possibleRules = rules;
 	}
 	
-	public void backward(String str) {
+	public void backward(String str, Robot robot) {
+		Delay.msDelay(2000);
 		RuleNode mainRule = find(str);
 		
 		// Checks if the main rule is null. If it is not null, then check if the LHS of the 
@@ -116,21 +114,56 @@ public class Algorithm {
 								
 			// Here we go through each and every pixels of the rule. This should be changed for different platforms
 			// ROBOT FUNCTIONS GO HERE
-			for (int i = 0; i < boxes.size(); ++i) {	
-				Pixel testCoord = boxes.get(i);
-				
-				for (int index = 0; index < lhsRules.size(); index++) {
-					Pixel ruleCoord = lhsRules.get(index);
+			
+			for (int row = 0; row <6; ++row ) {
+				for (int col = 0; col < 8; ++col) {
+					robot.travelOne();
 					
-					// At this point, check if the robot generated coordinates is equal to the ones in the list and if it is on. If not, then error
-					if (testCoord.getRow() == ruleCoord.getRow() && testCoord.getColumn() == ruleCoord.getColumn()) {
-						if (!testCoord.isOn()) {
-							LCD.drawString("Sorry not found",0,0);
-							return;
+					Pixel testCoord;
+					if (robot.isON()) {
+						//LCD.drawString("is on", 0, 0);
+						testCoord = new Pixel(row, col, true);
+					}
+					else {
+						//LCD.drawString("is off and " + robot.getOFF(), 0, 0);
+						testCoord = new Pixel(row, col, false);
+					}		
+					
+					//Delay.msDelay(2000);
+					for (int index = 0; index < lhsRules.size(); index++) {
+						Pixel ruleCoord = lhsRules.get(index);
+						
+						// At this point, check if the robot generated coordinates is equal to the ones in the list and if it is on. If not, then error
+						if (testCoord.getRow() == ruleCoord.getRow() && testCoord.getColumn() == ruleCoord.getColumn()) {
+							if (!testCoord.isOn()) {
+								LCD.drawString("Sorry not found",0,0);
+								return;
+							}
 						}
 					}
+					
+					LCD.drawString(row+" "+col, 0, 1);
+					
+					Delay.msDelay(1000);
+					LCD.clear();
 				}
 			}
+			
+//			for (int i = 0; i < boxes.size(); ++i) {	
+//				Pixel testCoord = boxes.get(i);
+//				
+//				for (int index = 0; index < lhsRules.size(); index++) {
+//					Pixel ruleCoord = lhsRules.get(index);
+//					
+//					// At this point, check if the robot generated coordinates is equal to the ones in the list and if it is on. If not, then error
+//					if (testCoord.getRow() == ruleCoord.getRow() && testCoord.getColumn() == ruleCoord.getColumn()) {
+//						if (!testCoord.isOn()) {
+//							LCD.drawString("Sorry not found",0,0);
+//							return;
+//						}
+//					}
+//				}
+//			}
 			
 			// At this point, character is recognized
 			LCD.drawString("Character has been recognized",0,0);
@@ -163,14 +196,18 @@ public class Algorithm {
 		return null;
 	}
 	
+	public ArrayList<String> getRuleValues() {
+		return rhsRules;
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 			    
-		Algorithm algo = new Algorithm("text.txt");
+		Algorithm algo = new Algorithm("text.txt", new Robot());
 		
 	    //Button.waitForAnyPress();
 		
-		algo.forward();
+		//algo.backward("C");
 	    
 	}
 		
