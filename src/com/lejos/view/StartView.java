@@ -97,10 +97,10 @@ public class StartView {
 			return;
 		}
 		else if (buttonID == Button.ID_ENTER) {
-			robot.recordOFF();
+			robot.readDistance();
 		}
 		
-		robot.readDistance();
+		
 		
 		LCD.drawString("Calibrated!!",0,2);
 		

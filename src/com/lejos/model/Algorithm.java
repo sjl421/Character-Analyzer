@@ -62,15 +62,17 @@ public class Algorithm {
 	}
 	
 	public void forward(Robot r) {
+		LCD.clear();
 		initiateForwardCondition();
 		
 		Robot robot = r;
 		boxes = new ArrayList<Pixel>();
+		boolean isTurn = false;
 		
-		for (int row = 0; row <6; ++row ) {
-			for (int col = 0; col < 8; ++col) {
-				robot.travelOne();
-				
+		for (int row = 0; row <8; ++row ) {
+			for (int col = 0; col < 6; ++col) {
+				robot.travelOne(isTurn);
+				isTurn=false;
 				if (robot.isON()) {
 					robot.soundON();
 					boxes.add(new Pixel(row,col,true));
@@ -98,9 +100,8 @@ public class Algorithm {
 				Delay.msDelay(1000);
 				LCD.clear();
 			}
-			LCD.drawString("Reconfigure if you have to", 0, 0);
-			Delay.msDelay(3000);
-			LCD.clear();
+			isTurn = true;
+			
 		}	
 		
 		ArrayList<String> substrings = new ArrayList<String>();
@@ -175,6 +176,7 @@ public class Algorithm {
 	}
 	
 	public void backward(String str, Robot robot) {
+		LCD.drawString(str+" is selected", 0, 0);
 		Delay.msDelay(2000);
 		RuleNode mainRule = find(str);
 		
@@ -187,11 +189,12 @@ public class Algorithm {
 								
 			// Here we go through each and every pixels of the rule. This should be changed for different platforms
 			// ROBOT FUNCTIONS GO HERE
-			
-			for (int row = 0; row <6; ++row ) {
-				for (int col = 0; col < 8; ++col) {
-					robot.travelOne();
+			boolean isTurn = false;
+			for (int row = 0; row <8; ++row ) {
+				for (int col = 0; col < 6; ++col) {
+					robot.travelOne(isTurn);
 					
+					isTurn = false;
 					Pixel testCoord;
 					if (robot.isON()) {
 						robot.soundON();
@@ -223,9 +226,8 @@ public class Algorithm {
 					Delay.msDelay(1000);
 					LCD.clear();
 				}
-				LCD.drawString("Reconfigure if you have to", 0, 0);
-				Delay.msDelay(3000);
-				LCD.clear();
+				isTurn = true;
+				
 			}
 			
 			// At this point, character is recognized

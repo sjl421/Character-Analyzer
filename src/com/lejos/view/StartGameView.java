@@ -9,6 +9,7 @@ import lejos.hardware.BrickFinder;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.TextMenu;
 
 public class StartGameView {
 	private ArrayList<String> characters = new ArrayList<String>();
@@ -54,41 +55,44 @@ public class StartGameView {
 		LCD.clear();
 		int cursorIndex=0;
 		// Display the choices
-		LCD.scroll();
+		String[] chars = new String[characters.size()];
+		
 		for (int i=0; i < characters.size(); ++i) {
-			LCD.drawString(characters.get(i), 0, i);
+			chars[i] = characters.get(i);
 		}
 		
 		LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
 		
-		while (true) {
-			int buttonPressed = Button.waitForAnyPress();
+		int testsNumber =0;
+		
+		while (!Button.ENTER.isDown()) {
+			TextMenu testsMenu = new TextMenu(chars, 1, "Select a test");
+			testsNumber = testsMenu.select();
+			//int buttonPressed = Button.waitForAnyPress();
 			
-			if (buttonPressed == Button.ID_ESCAPE) {
-				
-				break;
-			}
-			else if(buttonPressed == Button.ID_DOWN && cursorIndex < characters.size()) {
-				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
-				cursorIndex++;
-				
-				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
-			}
-			else if (buttonPressed == Button.ID_UP ) {
-				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
-				cursorIndex--;
-				//LCD.scroll();
-				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
-			}
-			else if (buttonPressed == Button.ID_ENTER) {
-				// Then get the character we want to compare and break from the loop
-				break;
-			}
+//			if (buttonPressed == Button.ID_ESCAPE) {
+//				
+//				break;
+//			}
+//			else if(buttonPressed == Button.ID_DOWN && cursorIndex < characters.size()) {
+//				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
+//				cursorIndex++;
+//				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
+//			}
+//			else if (buttonPressed == Button.ID_UP ) {
+//				LCD.drawString(" ", CURSOR_X_START, cursorIndex);
+//				cursorIndex--;
+//				LCD.drawString(MainView.CURSOR, CURSOR_X_START, cursorIndex);
+//			}
+//			else if (buttonPressed == Button.ID_ENTER) {
+//				// Then get the character we want to compare and break from the loop
+//				break;
+//			}
 			
 		}
 		
 		// At this point, cursor index points to the character we want
-		String testValue = characters.get(cursorIndex);
+		String testValue = characters.get(testsNumber);
 		
 		// Temporarily perform the backward search for C
 		LCD.clear();

@@ -22,6 +22,7 @@ public class Robot {
 	private final int RIGHT = 90;
 	private final int LEFT = -90;
 	
+	
 	private Pixel currentPixel;
 	
 	private static Port colorSensorPort = SensorPort.S4;
@@ -69,41 +70,19 @@ public class Robot {
 	
 	
 	
-	public void travelOne() {
-		// Robot checks with count and see if it should go right, left or forward
-		if (row ==7 && col == 5) {
-			return;
+	public void travelOne(boolean isTurn) {
+		
+		if (!isTurn ) {
+			pilot.travel(travelDistance);
 		}
-		else if (row %2 == 0) {
-			if (col <= 5) {
-				col ++;
-				// Robot goes forward
-				pilot.travel(travelDistance);
-			}
-			else {
-				row ++;
-				// Robot goes right
-				pilot.travel(travelDistance);
-				pilot.rotate(RIGHT);
-				pilot.travel(travelDistance);
-				pilot.rotate(RIGHT);
-			}
+		else {
+			pilot.travel(-6* travelDistance);
+			pilot.rotate(RIGHT);
+			pilot.travel(travelDistance);
+			pilot.rotate(LEFT);
+			pilot.travel(travelDistance);
 		}
-		else if (row % 2 == 1) {
-			if (col >= 0) {
-				col--;
-				// Robot goes forward
-				pilot.travel(travelDistance);
-			}
-			else {
-				row++;
-				// Robot goes left
-				pilot.travel(travelDistance);
-				pilot.rotate(LEFT);
-				pilot.travel(travelDistance);
-				pilot.rotate(LEFT);
-			}
-		}
+		
 	}
 	
 	public void recordON() {
@@ -150,10 +129,10 @@ public class Robot {
         sampleSize = sampleProvider.sampleSize();
         
         float value = getSample();
-        LCD.drawString(value+" is read", 0, 0);
-        Delay.msDelay(2000);
+        //LCD.drawString(value+" is read", 0, 0);
+        //Delay.msDelay(2000);
         float lowerBound = (float) (on * 0.75);
-        float upperBound = (float) (on * 1.25);       
+        float upperBound = (float) (on * 1.5);       
         
 		if ( value < upperBound) {
 			return true;
@@ -184,17 +163,17 @@ public class Robot {
 			System.out.println();
 			if(!onColorRead && (colorRead<=(on*1.2))){
 				onColorRead = true;
-				time1 = System.currentTimeMillis()/1000.00;
+				time1 = (double) System.currentTimeMillis()/1000.00;
 			}			
 			else if(onColorRead && (colorRead>(on*1.2) )){
-				time2 = System.currentTimeMillis()/1000.00;
+				time2 = (double) System.currentTimeMillis()/1000.00;
 				break;
 			}
 		}
 		pilot.stop();
 		LCD.clear();
 		double pixelSize = speed*(time2-time1);	
-		travelDistance = pixelSize;
+		travelDistance = pixelSize+0.7;
 		LCD.drawString("Pixel Size read as:", 0, 3);
 		LCD.drawString(""+pixelSize, 0, 4);
 		Delay.msDelay(1000);
