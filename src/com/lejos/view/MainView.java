@@ -1,3 +1,9 @@
+/************************************************************
+ * Name:  Sujil Maharjan                                    *
+ * Project:  Project 4/Lejos Robot			               *
+ * Class:  Artificial Intelligence/CMP 331                  *
+ * Date:  4/8/2016			                               *
+ ************************************************************/
 package com.lejos.view;
 
 import java.io.BufferedReader;
@@ -20,35 +26,48 @@ import lejos.hardware.lcd.Font;
 import lejos.hardware.lcd.GraphicsLCD;
 import lejos.hardware.lcd.LCD;
 
+/**
+ * It is the view for letting users select the search type
+ * @author Sujil Maharjan
+ *
+ */
 public class MainView {
-
-	//private GraphicsLCD g = BrickFinder.getDefault().getGraphicsLCD();
+	// Initialize forward search selection as true
 	private boolean isForward = true;
 	
+	// It holds the Cursor position in the LED and the actual cursor 
 	private final int CURSOR_X = 10;
-	final static String CURSOR = "<";
+	public final static String CURSOR = "<";
 	
-	//private Robot robot;
-	
+	/**
+	 * Constructor
+	 * @param fileName Name of the text file
+	 * @param robot It holds the robot object
+	 */
 	public MainView(String fileName, Robot robot) {
+		// Initiates the menu on the screen
 		initiateMenu(robot);
-		//this.robot = robot;
 		
 	}
 		
+	/**
+	 * It initiates the menu on the screen
+	 * @param robot It holds the robot object
+	 */
 	public void initiateMenu(Robot robot) {
 		LCD.clear();
 		
+		// Draw the cursor
 		LCD.drawString(CURSOR, CURSOR_X, 0);
 		while (true) {
 			//LCD.clear();
 			LCD.drawString("Forward", 0, 0);
 			LCD.drawString("Backward", 0, 1);
 			
-			
-			
+			// Wait for the user to press the button
 			int buttonPressed = Button.waitForAnyPress();
 			
+			// Check which button is pressed and handle the tasks accordingly
 			if (buttonPressed == Button.ID_DOWN && isForward) {
 				clearCursor();
 				LCD.drawString(CURSOR, CURSOR_X, 1);
@@ -60,6 +79,7 @@ public class MainView {
 				isForward = !isForward;
 			}
 			else if (buttonPressed == Button.ID_ENTER) {
+				// Starts the game if enter is pressed
 				StartGameView startGame = new StartGameView(isForward, robot);
 				LCD.clear();
 			}
@@ -67,12 +87,12 @@ public class MainView {
 				break;
 			}
 		}
-		
-		
-		
-		
+	
 	}
 	
+	/**
+	 * It clears the cursor from the screen
+	 */
 	public void clearCursor() {
 		LCD.drawString(" ", CURSOR_X, 0);
 		LCD.drawString(" ", CURSOR_X, 1);

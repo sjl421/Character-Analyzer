@@ -1,3 +1,9 @@
+/************************************************************
+ * Name:  Sujil Maharjan                                    *
+ * Project:  Project 4/Lejos Robot			               *
+ * Class:  Artificial Intelligence/CMP 331                  *
+ * Date:  4/8/2016			                               *
+ ************************************************************/
 package com.lejos.view;
 
 import com.lejos.controller.Robot;
@@ -6,30 +12,39 @@ import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 
+/**
+ * It is the initial window to the game
+ * @author Sujil Maharjan
+ *
+ */
 public class StartView {
-
+	// It holds the cursor position and the actual cursor
 	private final int CURSOR_X = 10;
 	private final String CURSOR = "<";
 	
+	// Initializes the scan value as false
 	private boolean isScan = false;
 	
+	// Initializes the robot
 	private Robot robot = new Robot();
 	
+	// Initializes the calibration to be false at the beginning
 	private boolean calibrated = false;
 	
+	/**
+	 * Constructor: It initiates the Menu
+	 */
 	public StartView() {
 		initiateMenu();
-		//robot  = new Robot();
+		
 	}
 	
+	/**
+	 * It initiates the menu and lets the user choose between calibration and scan
+	 */
 	public void initiateMenu() {
 		LCD.clear();
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		int x_coord = 0;
 		int y_coord = 0;
 		
@@ -42,7 +57,7 @@ public class StartView {
 			LCD.drawString("Calibrate", x_coord, y_coord);
 			LCD.drawString("Scan", x_coord, y_coord+1);
 			
-			
+			// Ask for user to press the button and handle the tasks accordingly
 			int button = Button.waitForAnyPress();
 			
 			if (button == Button.ID_DOWN && !isScan) {
@@ -63,6 +78,9 @@ public class StartView {
 				}
 				else {
 					if (!calibrated) {
+						calibrate();
+					}
+					else {
 						MainView mainView = new MainView("text.txt", robot);
 						LCD.clear();
 					}
@@ -74,10 +92,18 @@ public class StartView {
 		}
 	}
 	
+	/**
+	 * Handles the calibration of the robot with the board
+	 */
 	public void calibrate() {
 		LCD.clear();
+		
+		// Starts the color sensor
 		robot.startSensor();
+		
 		LCD.drawString("Enter for ON",0,0);
+		
+		// Waits for user to press the button every time they are ready for the calculation
 		int buttonID = Button.waitForAnyPress();
 		
 		if (buttonID == Button.ID_ESCAPE) {
@@ -106,6 +132,7 @@ public class StartView {
 			return;
 		}
 		else if (buttonID == Button.ID_ENTER) {
+			// It computes the distance of the pixel (pixel size)
 			robot.readDistance();
 		}
 		
