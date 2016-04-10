@@ -2,13 +2,19 @@
 Technical Manual
 Sujil Maharjan
 
-## Class Description:
+## Project Description:
+This is a Lejos project which will allow the Lejos robot to scan through the board of certain pixel and detects the letters/characters/any form of symbols that we provide in the rule. It utilizes the supervised learning procedure where it provides the users the option of choosing between forward and backward search. Since it is a supervised learning method, the user can provide the rules from which the program learns. 
 
+You can directly clone the project and run it in your Lejos EV3 robot. You can copy the StartView.jar in the root directory and copy it into the Lejos and make your own board. To know more about the Lejos Project, you can go to: http://www.lejos.org/
+
+It is a fun little project. Modify any way you want!
+
+## Class Description:
 ### EV3 Classes:
 1.	Robot.java: It handles all of the functions that the Lejos EV3 robot performs. The functions help the robot to move forward or make turns. 
-  i.	Sound Function: soundON(), soundOFF(), soundSuccess(), soundFailure() produces different types of beeps varying the sounds when the pixel is on, off, success, failure.
-  ii.	Color sensor Functions: startSensor(), recordON(), recordOFF(), readColor(), isON(), and readDistance() functions help start the color sensor, record color statistics for ON and OFF, read the color, check if the pixel is ON, and calibrate the size of the pixel. 
-  iii.	Travel Functions: travelOne() function helps to move the robot to a 1 unit distance according to the size of the board and the pixel. 
+  * Sound Function: soundON(), soundOFF(), soundSuccess(), soundFailure() produces different types of beeps varying the sounds when the pixel is on, off, success, failure.
+  * Color sensor Functions: startSensor(), recordON(), recordOFF(), readColor(), isON(), and readDistance() functions help start the color sensor, record color statistics for ON and OFF, read the color, check if the pixel is ON, and calibrate the size of the pixel. 
+  *	Travel Functions: travelOne() function helps to move the robot to a 1 unit distance according to the size of the board and the pixel. 
 
 ### Java Classes:
 1.	FileAccess.java: It handles the file access of the program. It accesses the file and fills in the rules into the algorithm so that we can start the algorithm functions.
